@@ -2,6 +2,7 @@ package lsmod
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 )
 
@@ -29,6 +30,10 @@ const (
 	TainedX    modTained = 65536  // (X): Auxiliary taint, defined and used by for distros.
 	TainedT    modTained = 131072 // (T): The kernel was built with the struct randomization plugin.
 )
+
+func (t modTained) String() string {
+	return strconv.Itoa(int(t))
+}
 
 func parseTained(tg string) ([]modTained, error) { // nolint: gocyclo
 	result := []modTained{}
