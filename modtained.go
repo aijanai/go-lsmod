@@ -2,6 +2,7 @@ package lsmod
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 )
 
@@ -29,6 +30,32 @@ const (
 	TainedX    modTained = 65536  // (X): Auxiliary taint, defined and used by for distros.
 	TainedT    modTained = 131072 // (T): The kernel was built with the struct randomization plugin.
 )
+
+func (t modTained) ToStringDescription() string {
+	codeLookup := map[string]string{
+		"1":      "proprietary module was loaded",
+		"2":      "module was force loaded",
+		"4":      "kernel running on an out of specification system",
+		"8":      "module was force unloaded",
+		"16":     "processor reported a Machine Check Exception (MCE)",
+		"32":     "bad page referenced or some unexpected page flags",
+		"64":     "taint requested by userspace application",
+		"128":    "kernel died recently, i.e. there was an OOPS or BUG",
+		"256":    "ACPI table overridden by user",
+		"512":    "kernel issued warning",
+		"1024":   "staging driver was loaded",
+		"2048":   "workaround for bug in platform firmware applied",
+		"4096":   "externally-built (“out-of-tree”) module was loaded",
+		"8192":   "unsigned module was loaded",
+		"16384":  "soft lockup occurred",
+		"32768":  "kernel has been live patched",
+		"65536":  "auxiliary taint, defined for and used by distros",
+		"131072": "kernel was built with the struct randomization plugin",
+		"262144": "an in-kernel test has been run",
+		"524288": "userspace used a mutating debug operation in fwctl",
+	}
+	return codeLookup[strconv.Itoa(int(t))]
+}
 
 func parseTained(tg string) ([]modTained, error) { // nolint: gocyclo
 	result := []modTained{}
